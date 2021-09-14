@@ -44,5 +44,4 @@ namespace test_MOnitoring
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
-    }
 }
