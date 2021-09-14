@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  test_monitoring:
+    image: ${DOCKER_REGISTRY-}testmonitoring
+    build:
+      context: .
+      dockerfile: test_MOnitoring/Dockerfile
