@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Core;
 using Serilog.Formatting.Elasticsearch;
-namespace FluentdTester
+namespace test_MOnitoring
 {
     [Route("api/[controller]")]
     [ApiController]
