@@ -1,8 +1,53 @@
-version: '3.4'
+version: '3.9'
+
+volumes:
+  test-logs:
 
 services:
+  fluentd-tester:
+    image:  monitoring_test:latest
+    volumes:
+        - test-logs:/app/logs
+    depends_on:
+        - "fluentd"
+    expose:
+        - "8080"
+    ports:
+        - "8080:80"
+
+  fluentd:
+    image: my_fluentd:0.0.1
+    user: root
+    volumes:
+      - test-logs:/app/logs/fluentd-tester
+    depends_on:
+      - "elasticsearch"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    environment:
+      - "discovery.type=single-node"
+    expose:
+      - "9200"
+    ports:
+      - "9200:9200"
+
+  #http://localhost:5601/app/management/kibana/indexPatterns
+  #Add index pattern: fluentd-*
+  #Time field: @timestam
+  kibana:
+    image: kibana:7.10.1
+    depends_on:
+      - "elasticsearch"
+    ports:
+      - "5601:5601"
+
   test_monitoring:
     image: ${DOCKER_REGISTRY-}testmonitoring
     build:
       context: .
       dockerfile: test_MOnitoring/Dockerfile
+
